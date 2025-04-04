@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from loguru import logger
 
 from app.config.settings import settings
@@ -13,6 +14,11 @@ def create_application() -> FastAPI:
         description="A microservice for interacting with Google Calendar API",
         version=settings.VERSION,
         docs_url="/docs" if settings.SHOW_DOCS else None,
+    )
+    
+    app.add_middleware(
+        SessionMiddleware, 
+        secret_key="your-secret-key-for-sessions"  # In production, use a secure random key from environment variables
     )
 
     # Add CORS middleware
